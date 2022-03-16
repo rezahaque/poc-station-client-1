@@ -10,7 +10,12 @@ import './StationsTable.scss';
 const getTotal = (data, key) =>
   data.reduce((acc, val) => acc + Number(val[key]), 0);
 
-const StationsTable = ({ item, isLast, setDeleteStationVisibility }) => {
+const StationsTableRow = ({ 
+  item, 
+  isLast, 
+  setDeleteStationVisibility, 
+  setSelectedStation 
+}) => {
   return (
     <tr>
       <td
@@ -39,12 +44,15 @@ const StationsTable = ({ item, isLast, setDeleteStationVisibility }) => {
       </td>
       <td>
           <Button variant="primary">Edit</Button>
-          <Button variant="danger" className='delete-btn' onClick={() => setDeleteStationVisibility(true)}>Delete</Button>
+          <Button variant="danger" className='delete-btn' onClick={() => {
+            setDeleteStationVisibility(true);
+            setSelectedStation(item.id)
+          }}>Delete</Button>
       </td>
     </tr>
   );
 };
-const DealForeCastTable = ({ data, setDeleteStationVisibility }) => {
+const StationsTable = ({ data, setDeleteStationVisibility, setSelectedStation }) => {
   return (
     <SimpleBarReact>
       <Table className="fs--1 mb-0">
@@ -58,11 +66,12 @@ const DealForeCastTable = ({ data, setDeleteStationVisibility }) => {
         </thead>
         <tbody>
           {data.map((item, index) => (
-            <StationsTable
+            <StationsTableRow
               key={item.id}
               item={item}
               isLast={data.length - 1 === index}
               setDeleteStationVisibility={setDeleteStationVisibility}
+              setSelectedStation={setSelectedStation}
             />
           ))}
         </tbody>
@@ -80,7 +89,7 @@ const DealForeCastTable = ({ data, setDeleteStationVisibility }) => {
   );
 };
 
-StationsTable.propTypes = {
+StationsTableRow.propTypes = {
   item: PropTypes.shape({
     id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     owner: PropTypes.string.isRequired,
@@ -92,8 +101,8 @@ StationsTable.propTypes = {
   isLast: PropTypes.bool.isRequired
 };
 
-DealForeCastTable.propTypes = {
-  data: PropTypes.arrayOf(StationsTable.propTypes.item)
+StationsTable.propTypes = {
+  data: PropTypes.array
 };
 
-export default DealForeCastTable;
+export default StationsTable;

@@ -14,6 +14,7 @@ const Home = () => {
     const [stationName, setStationName] = useState('');
     const [stationComment, setStationComment] = useState('');
     const [deleteStationVisibility, setDeleteStationVisibility] = useState(false);
+    const [selectedStation, setSelectedStation] = useState('');
 
     useEffect(() => {
         const controller = new AbortController();
@@ -50,11 +51,24 @@ const Home = () => {
             })
     }
 
+    const handleDeleteStation = () => {
+        axiosInstance.delete(`/api/station/${selectedStation}`)
+            .then(res => {
+                setStations(res.data.stations);
+                setDeleteStationVisibility(false);
+            })
+    }
+
     return (
         <div className="home-section">
             <Greetings />
             <Stats />
-            <Stations stations={stations} setModalVisibility={setModalVisibility} setDeleteStationVisibility={setDeleteStationVisibility} />
+            <Stations 
+                stations={stations} 
+                setModalVisibility={setModalVisibility} 
+                setDeleteStationVisibility={setDeleteStationVisibility}
+                setSelectedStation={setSelectedStation}
+            />
             <Users users={users} />
             {/* Add Station Modal */}
             <Modal
@@ -92,7 +106,7 @@ const Home = () => {
                     <hr />
                     <div>
                         <Button onClick={() => setDeleteStationVisibility(false)}>Cancel</Button>
-                        <Button variant="danger" style={{ marginLeft: "10px"}}>Delete</Button>
+                        <Button variant="danger" onClick={handleDeleteStation} style={{ marginLeft: "10px"}}>Delete</Button>
                     </div>
                 </Modal.Body>
             </Modal>

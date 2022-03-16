@@ -5,7 +5,7 @@ import StationsTable from './StationsTable';
 import { dealForecastByOwnerData } from 'data/dashboard/crm';
 import "./Stations.scss";
 
-const Stations = ({ stations, setModalVisibility, setDeleteStationVisibility }) => {
+const Stations = ({ stations, setModalVisibility, setDeleteStationVisibility, setSelectedStation }) => {
   return (
     <Card className="overflow-hidden mb-3">
         <div className="card-header">
@@ -13,7 +13,11 @@ const Stations = ({ stations, setModalVisibility, setDeleteStationVisibility }) 
             <Button variant="success" onClick={() => setModalVisibility(true)}>Add Station</Button>
         </div>
         <Card.Body className="p-0">
-            <StationsTable data={stations} setDeleteStationVisibility={setDeleteStationVisibility} />
+            <StationsTable 
+              data={stations} 
+              setDeleteStationVisibility={setDeleteStationVisibility}
+              setSelectedStation={setSelectedStation}
+            />
         </Card.Body>
     </Card>
   );
