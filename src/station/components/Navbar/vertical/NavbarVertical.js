@@ -29,9 +29,6 @@ const NavbarVertical = () => {
 
   const HTMLClassList = document.getElementsByTagName('html')[0].classList;
 
-  const { contextValue } = useContext(AuthContext);
-  const navigate = useNavigate();
-
   useEffect(() => {
     if (isNavbarVerticalCollapsed) {
       HTMLClassList.add('navbar-vertical-collapsed');
@@ -42,15 +39,6 @@ const NavbarVertical = () => {
       HTMLClassList.remove('navbar-vertical-collapsed-hover');
     };
   }, [isNavbarVerticalCollapsed, HTMLClassList]);
-
-  const handleLogout = () => {
-    axiosInstance.get('/api/user/logout')
-        .then(() => {
-            contextValue.logout();
-            localStorage.removeItem('user');
-            navigate('/login');
-        })
-  }
   //Control mouseEnter event
   let time = null;
   const handleMouseEnter = () => {
@@ -108,7 +96,6 @@ const NavbarVertical = () => {
                 <NavbarVerticalMenu routes={route.children} />
               </Fragment>
             ))}
-            <button className='logout-btn' onClick={handleLogout}>Logout</button>
           </Nav>
 
           <>

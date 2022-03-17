@@ -16,7 +16,7 @@ import team5 from 'assets/img/team/5-thumb.png';
 export const statsData = [
   {
     id: 1,
-    title: 'New Contact',
+    title: 'Stations',
     amount: 15,
     target: '2500 vs 2683',
     icon: 'phone',
@@ -27,7 +27,7 @@ export const statsData = [
   },
   {
     id: 2,
-    title: 'New Users',
+    title: 'Users',
     amount: 13,
     target: '1635 vs 863',
     icon: 'user',
@@ -38,7 +38,7 @@ export const statsData = [
   },
   {
     id: 3,
-    title: 'New Leads',
+    title: 'Production',
     amount: 16,
     target: '1423 vs 256',
     icon: 'bolt',
