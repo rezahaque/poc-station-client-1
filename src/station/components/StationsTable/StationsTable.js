@@ -44,7 +44,7 @@ const StationsTableRow = ({
       >
         {formatDate(item.createdAt)}
       </td>
-      { item.user.id === userId && <td>
+      <td>
           <Button variant="primary" onClick={() => {
             setEditModalVisibility(true);
             setSelectedStation(item);
@@ -53,7 +53,7 @@ const StationsTableRow = ({
             setDeleteStationVisibility(true);
             setSelectedStation(item.id);
           }}>Delete</Button>
-      </td>}
+      </td>
     </tr>
   );
 };

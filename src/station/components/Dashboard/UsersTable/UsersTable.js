@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import SimpleBarReact from 'simplebar-react';
-import { Table } from 'react-bootstrap';
+import { Button, Table } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import classNames from 'classnames';
 import { formatDate } from 'station/utils/date';
@@ -9,7 +9,7 @@ import { formatDate } from 'station/utils/date';
 const getTotal = (data, key) =>
   data.reduce((acc, val) => acc + Number(val[key]), 0);
 
-const UsersTable = ({ item, isLast }) => {
+const UsersTable = ({ item, isLast, setUserEditModalVisibility, setSelectedUser }) => {
   return (
     <tr>
       <td
@@ -29,10 +29,20 @@ const UsersTable = ({ item, isLast }) => {
       >
         {item.email}
       </td>
+      <td>
+        <Button variant="primary" onClick={() => {
+          setUserEditModalVisibility(true);
+          setSelectedUser(item);
+        }}>Edit</Button>
+        <Button variant="danger" className='delete-btn' onClick={() => {
+          // setDeleteStationVisibility(true);
+          // setSelectedStation(item.id);
+        }}>Delete</Button>
+      </td>
     </tr>
   );
 };
-const DealForeCastTable = ({ data }) => {
+const DealForeCastTable = ({ data, setUserEditModalVisibility, setSelectedUser }) => {
   return (
     <SimpleBarReact>
       <Table className="fs--1 mb-0">
@@ -40,6 +50,7 @@ const DealForeCastTable = ({ data }) => {
           <tr>
             <th className="text-nowrap">Name</th>
             <th className="text-nowrap">Email</th>
+            <th className="text-nowrap">Action</th>
           </tr>
         </thead>
         <tbody>
@@ -48,6 +59,8 @@ const DealForeCastTable = ({ data }) => {
               key={item.id}
               item={item}
               isLast={data.length - 1 === index}
+              setUserEditModalVisibility={setUserEditModalVisibility}
+              setSelectedUser={setSelectedUser}
             />
           ))}
         </tbody>

@@ -16,6 +16,12 @@ const Home = () => {
     const [stationComment, setStationComment] = useState('');
     const [deleteStationVisibility, setDeleteStationVisibility] = useState(false);
     const [selectedStation, setSelectedStation] = useState(null);
+    const [userModalVisibility, setUserModalVisibility] = useState(false);
+    const [userName, setUserName] = useState('');
+    const [userEmail, setUserEmail] = useState('');
+    const [userPassword, setUserPassword] = useState('');
+    const [userEditModalVisibility, setUserEditModalVisibility] = useState(false);
+    const [selectedUser, setSelectedUser] = useState(null);
 
     useEffect(() => {
         const controller = new AbortController();
@@ -81,6 +87,40 @@ const Home = () => {
         }));
     }
 
+    const handleUserFieldChange = (e, name) => {
+        setSelectedUser(user => ({
+            ...user,
+            [name]: e.target.value
+        }))
+    }
+
+    const handleEditUser = () => {
+        axiosInstance.patch(`/api/user/${selectedUser.id}`, {
+            name: selectedUser.name,
+            email: selectedUser.email
+        })
+            .then(res => {
+                if(res.data.statusCode === 200) {
+                    setUsers(res.data.users);
+                    setUserEditModalVisibility(false);
+                }
+            })
+    }
+
+    const handleAddUser = () => {
+        axiosInstance.post("/api/user/signup", {
+            name: userName,
+            email: userEmail,
+            password: userPassword
+          })
+            .then(res => {
+              if(res.data.statusCode === 201) {
+                setUsers(res.data.users);
+                setUserModalVisibility(false);
+              }
+            })
+    }
+
     return (
         <div className="home-section">
             <Greetings />
@@ -92,7 +132,12 @@ const Home = () => {
                 setDeleteStationVisibility={setDeleteStationVisibility}
                 setSelectedStation={setSelectedStation}
             />
-            <Users users={users} />
+            <Users 
+                users={users} 
+                setSelectedUser={setSelectedUser}
+                setUserModalVisibility={setUserModalVisibility}
+                setUserEditModalVisibility={setUserEditModalVisibility}
+            />
             {/* Add Station Modal */}
             <Modal
                 show={modalVisibility}
@@ -151,6 +196,86 @@ const Home = () => {
                 <Modal.Footer>
                     <Button onClick={() => setEditModalVisibility(false)}>Close</Button>
                     <Button variant="success" onClick={handleEditStation}>Edit</Button>
+                </Modal.Footer>
+            </Modal>
+            {/* Add User Modal */}
+            <Modal
+                show={userModalVisibility}
+                onHide={() => setUserModalVisibility(false)}
+                size="lg"
+                aria-labelledby="contained-modal-title-vcenter"
+                centered
+            >
+                <Modal.Header closeButton>
+                    <Modal.Title id="contained-modal-title-vcenter">Add User</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <input 
+                        type="text" 
+                        className="form-control mb-3" 
+                        placeholder="Name" 
+                        value={userName} 
+                        onChange={e => setUserName(e.target.value)} 
+                    />
+                    <input 
+                        type="email" 
+                        className="form-control mb-3" 
+                        placeholder="Email" 
+                        value={userEmail} 
+                        onChange={e => setUserEmail(e.target.value)} 
+                    />
+                    <input 
+                        type="password" 
+                        className="form-control mb-3" 
+                        placeholder="Password" 
+                        value={userPassword} 
+                        onChange={e => setUserPassword(e.target.value)} 
+                    />
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button onClick={() => setUserModalVisibility(false)}>Close</Button>
+                    <Button variant="success" onClick={handleAddUser}>Create</Button>
+                </Modal.Footer>
+            </Modal>
+            {/* Edit User Modal */}
+            <Modal
+                show={userEditModalVisibility}
+                onHide={() => setUserEditModalVisibility(false)}
+                size="lg"
+                aria-labelledby="contained-modal-title-vcenter"
+                centered
+            >
+                <Modal.Header closeButton>
+                    <Modal.Title id="contained-modal-title-vcenter">Edit User</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <input 
+                        type="text" 
+                        className="form-control mb-3" 
+                        placeholder="Name" 
+                        name="name"
+                        value={selectedUser?.name} 
+                        onChange={e => handleUserFieldChange(e, 'name')} 
+                    />
+                    <input 
+                        type="email" 
+                        className="form-control mb-3" 
+                        placeholder="Email" 
+                        name="email"
+                        value={selectedUser?.email} 
+                        onChange={e => handleUserFieldChange(e, 'email')} 
+                    />
+                    {/* <input 
+                        type="password" 
+                        className="form-control mb-3" 
+                        placeholder="Password" 
+                        value={selectedUser?.password} 
+                        onChange={e => setUserPassword(e.target.value)} 
+                    /> */}
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button onClick={() => setUserModalVisibility(false)}>Close</Button>
+                    <Button variant="success" onClick={handleEditUser}>Edit</Button>
                 </Modal.Footer>
             </Modal>
         </div>

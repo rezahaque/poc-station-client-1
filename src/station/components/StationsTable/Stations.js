@@ -15,8 +15,8 @@ const Stations = ({
   return (
     <Card className="overflow-hidden mb-3">
         <div className="card-header">
-            <h6 className="mb-0">All Stations</h6>
-            <Button variant="success" onClick={() => setModalVisibility(true)}>Add Station</Button>
+          <h6 className="mb-0">All Stations</h6>
+          <Button variant="success" onClick={() => setModalVisibility(true)}>Add Station</Button>
         </div>
         <Card.Body className="p-0">
             <StationsTable 
