@@ -13,9 +13,11 @@ const getTotal = (data, key) =>
 const StationsTableRow = ({ 
   item, 
   isLast, 
+  setEditModalVisibility,
   setDeleteStationVisibility, 
   setSelectedStation 
 }) => {
+  const userId = JSON.parse(localStorage.getItem('user')).id
   return (
     <tr>
       <td
@@ -42,17 +44,25 @@ const StationsTableRow = ({
       >
         {formatDate(item.createdAt)}
       </td>
-      <td>
-          <Button variant="primary">Edit</Button>
+      { item.user.id === userId && <td>
+          <Button variant="primary" onClick={() => {
+            setEditModalVisibility(true);
+            setSelectedStation(item);
+          }}>Edit</Button>
           <Button variant="danger" className='delete-btn' onClick={() => {
             setDeleteStationVisibility(true);
-            setSelectedStation(item.id)
+            setSelectedStation(item.id);
           }}>Delete</Button>
-      </td>
+      </td>}
     </tr>
   );
 };
-const StationsTable = ({ data, setDeleteStationVisibility, setSelectedStation }) => {
+const StationsTable = ({ 
+  data, 
+  setDeleteStationVisibility, 
+  setSelectedStation,
+  setEditModalVisibility
+}) => {
   return (
     <SimpleBarReact>
       <Table className="fs--1 mb-0">
@@ -70,6 +80,7 @@ const StationsTable = ({ data, setDeleteStationVisibility, setSelectedStation })
               key={item.id}
               item={item}
               isLast={data.length - 1 === index}
+              setEditModalVisibility={setEditModalVisibility}
               setDeleteStationVisibility={setDeleteStationVisibility}
               setSelectedStation={setSelectedStation}
             />

@@ -4,17 +4,18 @@ import Greetings from '../../components/Dashboard/Greetings/Greetings';
 import Users from 'station/components/Dashboard/UsersTable/Users';
 import Stations from '../../components/StationsTable/Stations';
 import axiosInstance from 'services/axiosInstance';
-import './Home.scss';
 import { Button, Modal } from 'react-bootstrap';
+import './Home.scss';
 
 const Home = () => {
     const [stations, setStations] = useState([]);
     const [users, setUsers] = useState([]);
     const [modalVisibility, setModalVisibility] = useState(false);
+    const [editModalVisibility, setEditModalVisibility] = useState(false);
     const [stationName, setStationName] = useState('');
     const [stationComment, setStationComment] = useState('');
     const [deleteStationVisibility, setDeleteStationVisibility] = useState(false);
-    const [selectedStation, setSelectedStation] = useState('');
+    const [selectedStation, setSelectedStation] = useState(null);
 
     useEffect(() => {
         const controller = new AbortController();
@@ -51,6 +52,20 @@ const Home = () => {
             })
     }
 
+    const handleEditStation = () => {
+        axiosInstance.patch(`/api/station/${selectedStation.id}`, {
+            name: selectedStation.name,
+            comment: selectedStation.comment
+        })
+            .then(res => {
+                if(res.data.statusCode === 200) {
+                    setStations(res.data.stations);
+                    setEditModalVisibility(false);
+                    setSelectedStation(null);
+                }
+            })
+    }
+
     const handleDeleteStation = () => {
         axiosInstance.delete(`/api/station/${selectedStation}`)
             .then(res => {
@@ -59,13 +74,21 @@ const Home = () => {
             })
     }
 
+    const handleStationFieldChange = (e, name) => {
+        setSelectedStation((station) => ({
+            ...station,
+            [name]: e.target.value,
+        }));
+    }
+
     return (
         <div className="home-section">
             <Greetings />
             <Stats />
             <Stations 
                 stations={stations} 
-                setModalVisibility={setModalVisibility} 
+                setModalVisibility={setModalVisibility}
+                setEditModalVisibility={setEditModalVisibility}
                 setDeleteStationVisibility={setDeleteStationVisibility}
                 setSelectedStation={setSelectedStation}
             />
@@ -109,6 +132,26 @@ const Home = () => {
                         <Button variant="danger" onClick={handleDeleteStation} style={{ marginLeft: "10px"}}>Delete</Button>
                     </div>
                 </Modal.Body>
+            </Modal>
+            {/* Edit Station Modal */}
+            <Modal
+                show={editModalVisibility}
+                onHide={() => setEditModalVisibility(false)}
+                size="lg"
+                aria-labelledby="contained-modal-title-vcenter"
+                centered
+            >
+                <Modal.Header closeButton>
+                    <Modal.Title id="contained-modal-title-vcenter">Edit Station</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <input type="text" className="form-control mb-3" name="name" placeholder="Station Name" value={selectedStation?.name} onChange={e => handleStationFieldChange(e, 'name')} />
+                    <textarea name="" id="" cols="15" rows="5" className="form-control" name="comment" placeholder="Comment" value={selectedStation?.comment} onChange={e => handleStationFieldChange(e, 'comment')} />
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button onClick={() => setEditModalVisibility(false)}>Close</Button>
+                    <Button variant="success" onClick={handleEditStation}>Edit</Button>
+                </Modal.Footer>
             </Modal>
         </div>
     )
