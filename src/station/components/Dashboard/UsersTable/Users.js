@@ -7,7 +7,8 @@ import { dealForecastByOwnerData } from 'data/dashboard/crm';
 const Users = ({ 
   users, 
   setUserModalVisibility, 
-  setUserEditModalVisibility ,
+  setUserEditModalVisibility,
+  setDeleteUserVisibility,
   setSelectedUser
 }) => {
   return (
@@ -21,6 +22,7 @@ const Users = ({
           data={users} 
           setUserEditModalVisibility={setUserEditModalVisibility}
           setSelectedUser={setSelectedUser}
+          setDeleteUserVisibility={setDeleteUserVisibility}
         />
       </Card.Body>
     </Card>

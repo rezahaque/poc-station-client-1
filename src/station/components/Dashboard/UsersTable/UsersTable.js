@@ -9,7 +9,7 @@ import { formatDate } from 'station/utils/date';
 const getTotal = (data, key) =>
   data.reduce((acc, val) => acc + Number(val[key]), 0);
 
-const UsersTable = ({ item, isLast, setUserEditModalVisibility, setSelectedUser }) => {
+const UsersTable = ({ item, isLast, setUserEditModalVisibility, setSelectedUser, setDeleteUserVisibility }) => {
   return (
     <tr>
       <td
@@ -35,14 +35,14 @@ const UsersTable = ({ item, isLast, setUserEditModalVisibility, setSelectedUser 
           setSelectedUser(item);
         }}>Edit</Button>
         <Button variant="danger" className='delete-btn' onClick={() => {
-          // setDeleteStationVisibility(true);
-          // setSelectedStation(item.id);
+          setDeleteUserVisibility(true);
+          setSelectedUser(item.id);
         }}>Delete</Button>
       </td>
     </tr>
   );
 };
-const DealForeCastTable = ({ data, setUserEditModalVisibility, setSelectedUser }) => {
+const DealForeCastTable = ({ data, setUserEditModalVisibility, setSelectedUser, setDeleteUserVisibility }) => {
   return (
     <SimpleBarReact>
       <Table className="fs--1 mb-0">
@@ -61,6 +61,7 @@ const DealForeCastTable = ({ data, setUserEditModalVisibility, setSelectedUser }
               isLast={data.length - 1 === index}
               setUserEditModalVisibility={setUserEditModalVisibility}
               setSelectedUser={setSelectedUser}
+              setDeleteUserVisibility={setDeleteUserVisibility}
             />
           ))}
         </tbody>

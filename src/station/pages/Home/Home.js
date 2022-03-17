@@ -22,6 +22,7 @@ const Home = () => {
     const [userPassword, setUserPassword] = useState('');
     const [userEditModalVisibility, setUserEditModalVisibility] = useState(false);
     const [selectedUser, setSelectedUser] = useState(null);
+    const [deleteUserVisibility, setDeleteUserVisibility] = useState(false);
 
     useEffect(() => {
         const controller = new AbortController();
@@ -121,6 +122,16 @@ const Home = () => {
             })
     }
 
+    const handleDeleteUser = () => {
+        axiosInstance.delete(`/api/user/${selectedUser}`)
+            .then(res => {
+                if(res.data.statusCode === 200) {
+                    setUsers(res.data.users);
+                    setDeleteUserVisibility(false);
+                }
+            })
+    }
+
     return (
         <div className="home-section">
             <Greetings />
@@ -136,6 +147,7 @@ const Home = () => {
                 users={users} 
                 setSelectedUser={setSelectedUser}
                 setUserModalVisibility={setUserModalVisibility}
+                setDeleteUserVisibility={setDeleteUserVisibility}
                 setUserEditModalVisibility={setUserEditModalVisibility}
             />
             {/* Add Station Modal */}
@@ -277,6 +289,26 @@ const Home = () => {
                     <Button onClick={() => setUserModalVisibility(false)}>Close</Button>
                     <Button variant="success" onClick={handleEditUser}>Edit</Button>
                 </Modal.Footer>
+            </Modal>
+            {/* Delete User Modal */}
+            <Modal
+                show={deleteUserVisibility}
+                onHide={() => setDeleteUserVisibility(false)}
+                size="lg"
+                aria-labelledby="contained-modal-title-vcenter"
+                centered
+            >
+                <Modal.Header closeButton>
+                    <Modal.Title id="contained-modal-title-vcenter">Delete User</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <p>Are you sure you want to delete?</p>
+                    <hr />
+                    <div>
+                        <Button onClick={() => setDeleteUserVisibility(false)}>Cancel</Button>
+                        <Button variant="danger" onClick={handleDeleteUser} style={{ marginLeft: "10px"}}>Delete</Button>
+                    </div>
+                </Modal.Body>
             </Modal>
         </div>
     )
